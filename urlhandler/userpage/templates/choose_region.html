@@ -1,0 +1,132 @@
+{% extends "mobile_base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}
+选择座位分区
+{% endblock %}
+
+{% block css %}
+
+<link href="{% static "css/base.css"%}?_=4" rel="stylesheet" type="text/css" />
+<link href="{% static "css/validation.css"%}?_=4" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block js %}
+    <script src="{% static "js/validation.js" %}?_=5"></script>
+    <script>
+    var tem_seat = "";
+     function ajaxForm(seat) {
+		submitValidation2('{{uid}}','{{actid}}',seat);
+    }
+     function judgeState(seatId) {
+      for(var i = 0; i < 45; i++){
+        if(String(document.getElementById("seat"+String(i+1)).style.backgroundColor) == "rgb(184, 61, 179)"){
+          document.getElementById("seat"+String(i+1)).style.backgroundColor="rgb(221, 160, 221)";
+        }
+      }
+      if (String(document.getElementById(seatId).style.backgroundColor) == "rgb(221, 160, 221)"){
+      	tem_seat = seatId
+        ChangeSeat(seatId);
+      }
+      else
+        QuitSeat(seatId);
+    }
+    //window.addEventListener('load', function() {showValidation({{ isValidated }});}, false);
+    function regionToSeats(){
+    	ajaxForm('A');
+	   }
+    function ChangeSeat(seatId){
+      document.getElementById(seatId).style.backgroundColor="rgb(184, 61, 179)";
+    }
+    function QuitSeat(seatId) {
+      document.getElementById(seatId).style.backgroundColor="";
+    }
+    function ajaxSeat(){
+      if(tem_seat.length == 5)
+        seatId = tem_seat[4];
+      else 
+        seatId = tem_seat[4]+tem_seat[5];
+    submitValidation2('{{uid}}','{{actid}}',seatId);
+    }
+    </script>
+{% endblock %}
+
+{% block theme %}
+    新清华学堂
+{% endblock %}
+
+{% block content %}
+            
+    <div id="validationHolder">
+        <form class="form-horizontal" role="form" action="{% url "userpage.views.choose_region_post" %}" method="post" id="validationForm" onsubmit="return false;">
+            {% csrf_token %}
+          <div class="form-group" id="usernameGroup">
+            <img id = "region" class = "header-img" src="{% static "img/newTsinghuaTest.jpg" %}" />
+            <button onclick = "ajaxSeat()" class="seatsBtn" id="seatSubmit" style="display:none;width:99%;color:#DA70D6;font-weight: bold;font-size: 15px">提交</button>
+            <!--<img id = "seats" class = "header-img" style="display: none" src="{% static "img/seatsTest.jpg" %}" />-->
+            <button onclick = "judgeState('seat1');" class="seatsBtn" id="seat1" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat2');" class="seatsBtn" id="seat2" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "" class="seatsBtn" id="seat3" style="display:none; background-color: #BBBBBB"></button>
+            <button onclick = "" class="seatsBtn" id="seat4" style="display:none; background-color: #BBBBBB"></button>
+            <button onclick = "judgeState('seat5');" class="seatsBtn" id="seat5" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat6');" class="seatsBtn" id="seat6" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat7');" class="seatsBtn" id="seat7" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "" class="seatsBtn" id="seat8" style="display:none; background-color: #BBBBBB"></button>
+            <button onclick = "" class="seatsBtn" id="seat9" style="display:none; background-color: #BBBBBB"></button>
+            <button onclick = "judgeState('seat10');" class="seatsBtn" id="seat10" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat11');" class="seatsBtn" id="seat11" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat12');" class="seatsBtn" id="seat12" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat13');" class="seatsBtn" id="seat13" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat14');" class="seatsBtn" id="seat14" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat15');" class="seatsBtn" id="seat15" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat16');" class="seatsBtn" id="seat16" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat17');" class="seatsBtn" id="seat17" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat18');" class="seatsBtn" id="seat18" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat19');" class="seatsBtn" id="seat19" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat20');" class="seatsBtn" id="seat20" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat21');" class="seatsBtn" id="seat21" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat22');" class="seatsBtn" id="seat22" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "" class="seatsBtn" id="seat23" style="display:none; background-color: #BBBBBB"></button>
+            <button onclick = "" class="seatsBtn" id="seat24" style="display:none; background-color: #BBBBBB"></button>
+            <button onclick = "judgeState('seat25');" class="seatsBtn" id="seat25" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat26');" class="seatsBtn" id="seat26" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat27');" class="seatsBtn" id="seat27" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat28');" class="seatsBtn" id="seat28" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat29');" class="seatsBtn" id="seat29" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat30');" class="seatsBtn" id="seat30" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat31');" class="seatsBtn" id="seat31" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat32');" class="seatsBtn" id="seat32" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat33');" class="seatsBtn" id="seat33" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat34');" class="seatsBtn" id="seat34" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat35');" class="seatsBtn" id="seat35" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat36');" class="seatsBtn" id="seat36" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat37');" class="seatsBtn" id="seat37" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat38');" class="seatsBtn" id="seat38" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat39');" class="seatsBtn" id="seat39" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat40');" class="seatsBtn" id="seat40" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat41');" class="seatsBtn" id="seat41" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat42');" class="seatsBtn" id="seat42" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat43');" class="seatsBtn" id="seat43" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat44');" class="seatsBtn" id="seat44" style="display:none; background-color:#DDA0DD"></button>
+            <button onclick = "judgeState('seat45');" class="seatsBtn" id="seat45" style="display:none; background-color:#DDA0DD"></button>
+          </div>
+          <div class="form-group" id="submitGroup">
+            <div style = "margin-left:20%">
+              <button onclick="regionToSeats()" class="btn btn-default" id="AArea">A区</button>
+              <button onclick="regionToSeats()" class="btn btn-default" id="BArea">B区</button>
+              <button onclick="regionToSeats()" class="btn btn-default" id="CArea">C区</button>
+              <button onclick="regionToSeats()" class="btn btn-default" id="DArea">D区</button>
+            </div>
+          </div>
+          <div class="form-group" id = "bookOK" style="display:none">
+	          	<img src="{% static "img/success.png" %}" />
+	          	 <div>选座成功了耶~请点击"查票"按钮查看详情~~~</div>
+          </div>
+          <div class="form-group" id = "bookError" style="display: none">
+	          	<img src="{% static "img/fail.png" %}" />
+	          	 <div>您已抢到此活动的票了，请勿重复抢票。</div>
+          </div>
+        </form>
+    </div>
+{% endblock %}
