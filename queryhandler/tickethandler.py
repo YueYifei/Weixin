@@ -23,10 +23,14 @@ def get_user(openid):
 
 
 def get_reply_single_ticket(msg, ticket, now, ext_desc=''):
+    tic = Ticket.objects.select_for_update().filter(unique_id=ticket.unique_id)
+    act_id = tic[0].activity_id
+    act = Activity.objects.select_for_update().filter(id=act_id)
+    pic = act[0].pic_url
     return get_reply_single_news_xml(msg, get_item_dict(
         title=get_text_one_ticket_title(ticket, now),
         description=ext_desc + get_text_one_ticket_description(ticket, now),
-        pic_url=get_text_ticket_pic(ticket),
+        pic_url=pic,
         url=s_reverse_ticket_detail(ticket.unique_id)
     ))
 
@@ -259,8 +263,18 @@ def response_cancel_ticket(msg):
             if tickets.exists():   # user has already booked the activity
                 ticket = tickets[0]
                 ticket.status = 0
+                seat = ticket.area
+                st =  'remain_tickets'+ '_' + seat
+                if seat == 'A':
+                   Activity.objects.filter(id=activity.id).update(remain_tickets_A=F(st)+1)
+                if seat == 'B':
+                   Activity.objects.filter(id=activity.id).update(remain_tickets_B=F(st)+1)
+                if seat == 'C':
+                   Activity.objects.filter(id=activity.id).update(remain_tickets_C=F(st)+1)
+                if seat == 'D':
+                   Activity.objects.filter(id=activity.id).update(remain_tickets_D=F(st)+1)
+				   
                 ticket.save()
-                Activity.objects.filter(id=activity.id).update(remain_tickets=F('remain_tickets')+1)
                 return get_reply_text_xml(msg, get_text_success_cancel_ticket())
             else:
                 return get_reply_text_xml(msg, get_text_fail_cancel_ticket())
@@ -393,6 +407,21 @@ def response_book_seat_ticket(msg):
     fromuser = get_msg_from(msg)
     user = get_user(fromuser)
     if user is None:
-        return get_reply_text_xml(msg, get_text_to_book_seat_ticket(fromuser, msg['EventKey']))
+        return get_reply_text_xml(msg, get_text_unbinded_book_ticket(fromuser))
     else:
+        now = datetime.datetime.fromtimestamp(get_msg_create_time(msg))
+    
+        cmd_list = get_msg_event_key(msg).split('_')
+        activity_id = int(cmd_list[2])
+        activities = Activity.objects.filter(id=activity_id, status=1, end_time__gt=now)
+        if activities.exists():
+            activity = activities[0]
+        else:
+            return get_reply_text_xml(msg, get_text_no_such_activity())
+    
+        if activity.book_start > now:
+            return get_reply_text_xml(msg, get_text_book_ticket_future(activity, now))
+        if activity.book_end < now:
+            return get_reply_text_xml(msg, get_text_timeout_book_event())
+
         return get_reply_text_xml(msg, get_text_to_book_seat_ticket(fromuser, msg['EventKey']))

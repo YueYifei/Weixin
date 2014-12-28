@@ -24,6 +24,10 @@ class Activity(models.Model):
     total_tickets_B = models.IntegerField()
     total_tickets_C = models.IntegerField()
     total_tickets_D = models.IntegerField()
+    seats_for_choose_A = models.TextField(null=True)
+    seats_for_choose_B = models.TextField(null=True)
+    seats_for_choose_C = models.TextField(null=True)
+    seats_for_choose_D = models.TextField(null=True)
     status = models.IntegerField()
     pic_url = models.CharField(max_length=255)
     remain_tickets = models.IntegerField()
@@ -46,7 +50,7 @@ class Ticket(models.Model):
     activity = models.ForeignKey(Activity)
     status = models.IntegerField()
     area = models.CharField(max_length=255, null=True)
-    seatId = models.IntegerField(default=-1)
+    seatId = models.CharField(max_length=255,default = "")
     type = models.IntegerField()
     # Something about isUsed
     # 0: ticket order is cancelled

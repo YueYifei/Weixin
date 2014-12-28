@@ -2,7 +2,7 @@
     padding: 20px;
 }
 
-#successHolder {
+#successHolder, #bookOK, #bookError{
     padding: 20px;
     text-align: center;
 }
@@ -132,7 +132,6 @@ label {
 
 .form-group {
   margin-bottom: 15px;
-  background-image: url(static/newTsinghuaTest.jpg);
 }
 
 .form-horizontal .control-label {
@@ -186,6 +185,54 @@ label {
       -ms-user-select: none;
        -o-user-select: none;
           user-select: none;
+}
+
+.seatsBtn {
+  border: 1px solid transparent;
+  border-radius: 4px;
+  border-color: #DDA0DD;
+  color: #DA70D6;
+  background-color: #DDA0DD;
+  border-color: #DDA0DD;
+
+  width:10%;
+  height:30px;
+
+  padding: 1% 1%;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+       -o-user-select: none;
+          user-select: none;
+}
+
+.seatsBtn:hover,
+.seatsBtn:focus {
+  color:#DA70D6;
+  text-decoration: none;
+}
+
+.seatsBtn:active,
+.seatsBtn.active {
+  background-color:none;
+  outline:0;
+  -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+          box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.seatsBtn:disabled,
+.seatsBtn[disabled] {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+          box-shadow: none;
 }
 
 .btn:focus {
@@ -306,5 +353,15 @@ label {
   color: #468847;
   background-color: #dff0d8;
   border-color: #468847;
+}
+
+
+.choose_region_btn{
+  margin:5px;
+  border-color: #00F5FF;
+  width: 120px;
+  height: 40px;
+  font-size: 20px;
+  font-family: microsoft Yahei;
 }
 

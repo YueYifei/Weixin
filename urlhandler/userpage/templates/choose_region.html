@@ -1,4 +1,4 @@
-{% extends "mobile_base.html" %}
+﻿{% extends "mobile_base.html" %}
 
 {% load staticfiles %}
 
@@ -9,46 +9,193 @@
 {% block css %}
 
 <link href="{% static "css/base.css"%}?_=4" rel="stylesheet" type="text/css" />
-<link href="{% static "css/validation.css"%}?_=4" rel="stylesheet" type="text/css" />
+<link href="{% static "css/choose_region.css"%}?_=4" rel="stylesheet" type="text/css" />
+<link href="http://cdn.bootcss.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+<style type="text/css">
+#successTicket {
+      background-image: url('{% static "img/bg2.jpg" %}');
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      height:1400px;
+      width:100%;
+      text-align:center;
+      }
+    .seats {
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-image: none;
+      -webkit-user-select: none;
+         -moz-user-select: none;
+          -ms-user-select: none;
+           -o-user-select: none;
+              user-select: none;
+    }
+</style>
 {% endblock %}
 
 {% block js %}
-    <script src="{% static "js/validation.js" %}?_=5"></script>
+    <script src="{% static "js/choose_region.js" %}?_=5"></script>
     <script>
-    var tem_seat = "";
      function ajaxForm(seat) {
-		submitValidation2('{{uid}}','{{actid}}',seat);
-    }
-     function judgeState(seatId) {
-      for(var i = 0; i < 45; i++){
-        if(String(document.getElementById("seat"+String(i+1)).style.backgroundColor) == "rgb(184, 61, 179)"){
-          document.getElementById("seat"+String(i+1)).style.backgroundColor="rgb(221, 160, 221)";
-        }
-      }
-      if (String(document.getElementById(seatId).style.backgroundColor) == "rgb(221, 160, 221)"){
-      	tem_seat = seatId
-        ChangeSeat(seatId);
-      }
-      else
-        QuitSeat(seatId);
+		submitSeats('{{uid}}','{{actid}}',seat);
     }
     //window.addEventListener('load', function() {showValidation({{ isValidated }});}, false);
-    function regionToSeats(){
-    	ajaxForm('A');
-	   }
-    function ChangeSeat(seatId){
-      document.getElementById(seatId).style.backgroundColor="rgb(184, 61, 179)";
-    }
-    function QuitSeat(seatId) {
-      document.getElementById(seatId).style.backgroundColor="";
-    }
+    function regionToSeats(seat){
+      if(window.confirm("您选择的区域是："+seat+" 区， 选择后将不可更改。")){
+        area = seat;
+        ajaxForm(seat);
+      }
+	}
     function ajaxSeat(){
-      if(tem_seat.length == 5)
-        seatId = tem_seat[4];
-      else 
-        seatId = tem_seat[4]+tem_seat[5];
-    submitValidation2('{{uid}}','{{actid}}',seatId);
+        if (typeof tem_seat == "string" && tem_seat != "")
+            submitSeats('{{uid}}','{{actid}}',tem_seat);
+        else
+            alert("请选择座位！");
     }
+    </script>
+    <script>
+        function createAreaA() {
+            for (var i = 1; i <= 72; i++) {
+                seat = document.createElement("div");
+                seat.className = "seats";
+                col = Math.ceil(i / 18);
+                row = i % 18;
+                if (row == 0)
+                    row = 18;
+                seat.setAttribute("id", "A_" + col + "_" + row);
+                seat.setAttribute("style", "width:4.5%; margin-left:0.5%; margin-right:0.5%; margin-top:0.3%; float:left");
+                seat.innerHTML = "<img src='{% static "img/seat_disable.png" %}' style='width:100%' />";
+                document.getElementById("areaA").appendChild(seat);
+		
+                document.getElementById("A_" + col + "_" + row).addEventListener('click', function(e){
+                    changeState(e);
+                },false);
+            }
+        }
+        function createAreaB() {
+            for (var i = 1; i <= 72; i++) {
+                seat = document.createElement("div");
+                seat.className = "seats";
+                col = Math.ceil(i / 18) + 4;
+                row = i % 18;
+                if (row == 0)
+                    row = 18;
+                seat.setAttribute("id", "B_" + col + "_" + row);
+                seat.setAttribute("style", "width:4.5%; margin-left:0.5%; margin-right:0.5%; margin-top:0.3%; float:left");
+                seat.innerHTML = "<img src='{% static "img/seat_disable.png" %}' style='width:100%' />";
+                document.getElementById("areaB").appendChild(seat);
+		
+                document.getElementById("B_" + col + "_" + row).addEventListener('click', function(e){
+                    changeState(e);
+                },false);
+            }
+        }
+        function createAreaC() {
+            var count = 1;
+            var Cseat = [0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0,
+                         0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0,
+                         1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1];
+            for (var i = 1; i <= 300; i++) {
+                seat = document.createElement("div");
+                if (Cseat[i - 1] == 1) {
+                    seat.className = "seats";
+                    col = Math.ceil(i / 30);
+                    switch (col) {
+                        case 1:
+                            row = count;
+                            break;
+                        case 2:
+                            row = count - 6;
+                            break;
+                        case 3:
+                            row = count - 14;
+                            break;
+                        case 4:
+                        case 5:
+                        case 6:
+                        case 7:
+                        case 8:
+                        case 9:
+                            row = count - 14 - (col - 3) * 10;
+                            break;
+                        case 10:
+                            row = count - 102;
+                            break;
+                    }
+                    seat.setAttribute("id", "C_" + col + "_" + row);
+                    seat.setAttribute("style", "width:2.8%; margin:0.3% 0.3%; margin-top:0.3%; float:left");
+                    seat.innerHTML = "<img src='{% static "img/seat_disable.png" %}' style='width:100%' />";
+                    document.getElementById("areaC").appendChild(seat);
+		
+                    document.getElementById("C_" + col + "_" + row).addEventListener('click', function(e){
+                        changeState(e);
+                    },false);
+                    count++;
+                }
+                else {
+                    seat.setAttribute("style", "width:2.8%; margin:0.3% 0.3%; margin-top:0.3%; float:left");
+                    seat.innerHTML = "<img src='{% static "img/noseat.png" %}' style='width:100%' />";
+                    document.getElementById("areaC").appendChild(seat);
+                }
+            }
+        }
+        function createAreaD() {
+            var Dseat = [1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1,
+                         0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0];
+            var count = 1;
+            for (var i = 1; i <= 90; i++) {
+                seat = document.createElement("div");
+                if (Dseat[i - 1] == 1) {
+                    seat.className = "seats";
+                    col = Math.ceil(i / 30) + 10;
+                    row = count % 28;
+                    if (row == 0)
+                        row = 28;
+                    seat.setAttribute("id", "D_" + col + "_" + row);
+                    seat.setAttribute("style", "width:2.8%; margin:0.3% 0.3%; float:left");
+                    seat.innerHTML = "<img src='{% static "img/seat_disable.png" %}' style='width:100%' />";
+                    document.getElementById("areaD").appendChild(seat);
+		
+                    document.getElementById("D_" + col + "_" + row).addEventListener('click', function(e){
+                        changeState(e);
+                    },false);
+                    count++;
+                }
+                else {
+                    seat.setAttribute("style", "width:2.8%; margin:0.3% 0.3%; float:left");
+                    seat.innerHTML = "<img src='{% static "img/noseat.png" %}' style='width:100%' />";
+                    document.getElementById("areaD").appendChild(seat);
+                }
+            }
+        }
+
+        function changeState(e) {
+            if (e.target.src == "http://wx8.igeek.asia/static1/img/seat_active.png") {
+                var seats = document.getElementsByClassName('seats');
+                for (var i = 0; i < seats.length; i++) {
+                    seatimg = seats[i].firstChild;
+                    if (seatimg.src == "http://wx8.igeek.asia/static1/img/seat_chosen.png")
+                        seatimg.src = '{% static "img/seat_active.png" %}';
+                    seats[i].replaceChild(seatimg, seats[i].firstChild);
+                }
+                e.target.src = '{% static "img/seat_chosen.png" %}';
+                tem_seat = e.target.parentNode.id;
+            }
+        }
+
+        createAreaA();
+        createAreaB();
+        createAreaC();
+        createAreaD();
     </script>
 {% endblock %}
 
@@ -62,71 +209,47 @@
         <form class="form-horizontal" role="form" action="{% url "userpage.views.choose_region_post" %}" method="post" id="validationForm" onsubmit="return false;">
             {% csrf_token %}
           <div class="form-group" id="usernameGroup">
-            <img id = "region" class = "header-img" src="{% static "img/newTsinghuaTest.jpg" %}" />
-            <button onclick = "ajaxSeat()" class="seatsBtn" id="seatSubmit" style="display:none;width:99%;color:#DA70D6;font-weight: bold;font-size: 15px">提交</button>
-            <!--<img id = "seats" class = "header-img" style="display: none" src="{% static "img/seatsTest.jpg" %}" />-->
-            <button onclick = "judgeState('seat1');" class="seatsBtn" id="seat1" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat2');" class="seatsBtn" id="seat2" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "" class="seatsBtn" id="seat3" style="display:none; background-color: #BBBBBB"></button>
-            <button onclick = "" class="seatsBtn" id="seat4" style="display:none; background-color: #BBBBBB"></button>
-            <button onclick = "judgeState('seat5');" class="seatsBtn" id="seat5" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat6');" class="seatsBtn" id="seat6" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat7');" class="seatsBtn" id="seat7" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "" class="seatsBtn" id="seat8" style="display:none; background-color: #BBBBBB"></button>
-            <button onclick = "" class="seatsBtn" id="seat9" style="display:none; background-color: #BBBBBB"></button>
-            <button onclick = "judgeState('seat10');" class="seatsBtn" id="seat10" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat11');" class="seatsBtn" id="seat11" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat12');" class="seatsBtn" id="seat12" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat13');" class="seatsBtn" id="seat13" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat14');" class="seatsBtn" id="seat14" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat15');" class="seatsBtn" id="seat15" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat16');" class="seatsBtn" id="seat16" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat17');" class="seatsBtn" id="seat17" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat18');" class="seatsBtn" id="seat18" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat19');" class="seatsBtn" id="seat19" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat20');" class="seatsBtn" id="seat20" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat21');" class="seatsBtn" id="seat21" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat22');" class="seatsBtn" id="seat22" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "" class="seatsBtn" id="seat23" style="display:none; background-color: #BBBBBB"></button>
-            <button onclick = "" class="seatsBtn" id="seat24" style="display:none; background-color: #BBBBBB"></button>
-            <button onclick = "judgeState('seat25');" class="seatsBtn" id="seat25" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat26');" class="seatsBtn" id="seat26" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat27');" class="seatsBtn" id="seat27" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat28');" class="seatsBtn" id="seat28" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat29');" class="seatsBtn" id="seat29" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat30');" class="seatsBtn" id="seat30" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat31');" class="seatsBtn" id="seat31" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat32');" class="seatsBtn" id="seat32" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat33');" class="seatsBtn" id="seat33" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat34');" class="seatsBtn" id="seat34" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat35');" class="seatsBtn" id="seat35" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat36');" class="seatsBtn" id="seat36" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat37');" class="seatsBtn" id="seat37" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat38');" class="seatsBtn" id="seat38" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat39');" class="seatsBtn" id="seat39" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat40');" class="seatsBtn" id="seat40" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat41');" class="seatsBtn" id="seat41" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat42');" class="seatsBtn" id="seat42" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat43');" class="seatsBtn" id="seat43" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat44');" class="seatsBtn" id="seat44" style="display:none; background-color:#DDA0DD"></button>
-            <button onclick = "judgeState('seat45');" class="seatsBtn" id="seat45" style="display:none; background-color:#DDA0DD"></button>
+		    <div style="width:90%; text-align:center; margin:auto">
+              <img id = "region" class = "header-img" src="{% static "img/newTsinghuaTest.png" %}" />
+			  </div>
+        <div style="width:90%; text-align:center; margin:auto">
+              <img class = "header-img" src="{% static "img/seatSet.png" %}" />
+        </div>
           </div>
           <div class="form-group" id="submitGroup">
-            <div style = "margin-left:20%">
-              <button onclick="regionToSeats()" class="btn btn-default" id="AArea">A区</button>
-              <button onclick="regionToSeats()" class="btn btn-default" id="BArea">B区</button>
-              <button onclick="regionToSeats()" class="btn btn-default" id="CArea">C区</button>
-              <button onclick="regionToSeats()" class="btn btn-default" id="DArea">D区</button>
+            <div style = "margin:auto; text-align:center; margin-top: 50px">
+              <button onclick="regionToSeats('A')" class="btn btn-default choose_region_btn" id="AArea">A区</button>
+              <button onclick="regionToSeats('B')" class="btn btn-default choose_region_btn" id="BArea">B区</button>
+              <button onclick="regionToSeats('C')" class="btn btn-default choose_region_btn" id="CArea">C区</button>
+              <button onclick="regionToSeats('D')" class="btn btn-default choose_region_btn" id="DArea">D区</button>
             </div>
           </div>
-          <div class="form-group" id = "bookOK" style="display:none">
-	          	<img src="{% static "img/success.png" %}" />
-	          	 <div>选座成功了耶~请点击"查票"按钮查看详情~~~</div>
-          </div>
-          <div class="form-group" id = "bookError" style="display: none">
-	          	<img src="{% static "img/fail.png" %}" />
-	          	 <div>您已抢到此活动的票了，请勿重复抢票。</div>
-          </div>
+          
+            <div class="form-group" id="areaA" style="text-align:center; margin:auto; padding-left:2.5%; padding-right:2.5%; display:none">
+                <div style="display:inline"><p style="text-align:center; font-size: 30px;">恭喜你！你已经抢得本区的票，请选择座位。</p></div>
+            </div>
+            <div class="form-group" id="areaB" style="text-align:center; margin:auto; padding-left:2.5%; padding-right:2.5%; display:none">
+                <div style="display:inline"><p style="text-align:center; font-size: 30px;">恭喜你！你已经抢得本区的票，请选择座位。</p></div>
+            </div>
+            <div class="form-group" id="areaC" style="text-align:center; margin:auto; padding-left:2.5%; padding-right:2.5%; display:none">
+                <div style="display:inline"><p style="text-align:center; font-size: 30px;">恭喜你！你已经抢得本区的票，请选择座位。</p></div>
+            </div>
+            <div class="form-group" id="areaD" style="text-align:center; margin:auto; padding-left:2.5%; padding-right:2.5%; display:none">
+                <div style="display:inline"><p style="text-align:center; font-size: 30px;">恭喜你！你已经抢得本区的票，请选择座位。</p></div>
+            </div>
+            <div class="form-group" id="seatSubmit" style="margin:auto; text-align:center; display:none">
+                <button onclick = "ajaxSeat()" class="btn btn-default" style="margin-top:20px">提交</button>
+            </div>
         </form>
     </div>
+          <div class="form-group" id = "bookOK" style="display:none;">
+               <div id="successTicket" style="display:table;">
+              <!--<img styleSheet = "width = 100%" src="bg.jpg" />-->
+              <p style="display: table-cell; vertical-align: middle;text-align:center;"><span id = "rankPlace" style="font-size:2000%;color:#40E0D0;font-weight:900;">None</span><br/><span style="font-weight:900;font-size:500%;color:black;"><span id="chosenArea">None</span>区 <span id = "chosenCol">None</span>排<span id="chosenRow">None</span>座位</span></p>    
+              </div>
+          </div>
+          <div class="form-group" id = "bookError" style="display: none">
+              <img src="{% static "img/fail.png" %}" />
+               <div>抢票失败！请返回重新选择。</div>
+          </div>
 {% endblock %}

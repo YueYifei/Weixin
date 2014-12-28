@@ -8,6 +8,15 @@
 
 {% block css %}
 <link href="{% static "css/validation.css" %}?_=3" rel="stylesheet" type="text/css" />
+<style type="text/css">
+#successTicket {
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      height:100%;
+      width:100%;
+      text-align:center;
+      }
+</style>
 {% endblock %}
 
 {% block js %}
@@ -15,6 +24,14 @@
     <script>
     function ajaxForm() {
         submitValidation('{{ openid }}');
+    }
+    function successTicket(rank, Area, Seat) {
+    	$('#rankPlace').text(""+rank);
+    	$('#chosenArea').text(Area);
+    	$('#chosenSeat').text(""+Seat);
+    	$("#successTicket").attr("style","display:block");
+    	$("#usernameGroup").attr("style","display:none");
+    	$("#submitGroup").attr("style","display:none");
     }
     window.addEventListener('load', function() {showValidation({{ isValidated }});}, false);
     </script>
@@ -29,7 +46,8 @@
     <div id="validationHolder">
         <form class="form-horizontal" role="form" action="{% url "userpage.views.validate_post" %}" method="post" id="validationForm" onsubmit="return false;">
             {% csrf_token %}
-          <div class="form-group" id="usernameGroup">
+          <div class="form-group" id="usernameGroup" style="display:none">
+            <p style="display: table-cell; vertical-align: middle;text-align:center;"><span id = "rankPlace" style="font-size:1050%;color:#FF00FF;font-weight:900;">None</span><span style="font-weight:900;font-size:200%;color:red;"><span id="chosenArea">None</span>区 <span id = "chosenSeat">None</span>座位</span></p>
             <img styleSheet = "width = 100%" src="{% static "img/seatsTest.jpg" %}" />
             <!--<label for="inputUsername" class="col-xs-3 control-label">学号</label>
             <div class="col-xs-9">
@@ -55,11 +73,11 @@
               <p class="help-block" id="helpSubmit"></p>-->
             </div>
           </div>
+          <div id="successTicket" style="display: table;">
+        	<!--<img styleSheet = "width = 100%" src="bg.jpg" />-->
+        	<p style="display: table-cell; vertical-align: middle;text-align:center;"><span id = "rankPlace" style="font-size:1050%;color:#FF00FF;font-weight:900;">None</span><span style="font-weight:900;font-size:200%;color:red;"><span id="chosenArea">None</span>区 <span id = "chosenSeat">None</span>座位</span></p>    
+    	  </div>
         </form>
     </div>
-    <!--<div id="successHolder" style="display: none">
-        <img src="{% static "img/success.png" %}" />
-        <p>认证成功！</p>
-        <p>您已经可以使用“紫荆之声”的全部功能了！</p>
-    </div>-->
+    
 {% endblock %}

@@ -46,12 +46,12 @@ def handle_weixin_request(environ):
                 if handler['check'](msg):
                     return handler['response'](msg)
         except Exception as e:
-            print 'Error occured!' + str(e)
+            print 'Error occured!!!!!!' + str(e)
             return get_reply_text_xml(msg, u'对不起，没有找到您需要的信息 T T')
         try:
             return get_information_response(request_body)
         except Exception as e:
-            print 'Error occured!' + str(e)
+            print 'Error occured!!!!!!' + str(e)
             return get_reply_text_xml(msg, u'对不起，没有找到您需要的信息:(')
 
 

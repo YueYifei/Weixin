@@ -54,6 +54,10 @@
             'total_tickets_B': {{ activity.total_tickets_B }},
             'total_tickets_C': {{ activity.total_tickets_C }},
             'total_tickets_D': {{ activity.total_tickets_D }},
+            //'seats_for_choose_A': {{ activity.seats_for_choose_A}},
+            //'seats_for_choose_B': {{ activity.seats_for_choose_B}},
+            //'seats_for_choose_C': {{ activity.seats_for_choose_C}},
+            //'seats_for_choose_D': {{ activity.seats_for_choose_D}},
             'status': {{ activity.status }}{% else %},
             'status': 0{% endif %}{% if activity.tickets_ready %},
             'checked_tickets': {{ activity.checked_tickets }},
@@ -63,6 +67,7 @@
 
     </script>
     <script src="{% static "js/activity_detail.js" %}"></script>
+    <script src="{% static "js/set_seat.js" %}"></script>
 {% endblock %}
 
 {% block activity-list-active %}{% endblock %}
@@ -205,12 +210,6 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="input-total_tickets" class="col-sm-2 control-label">总票数</label>
-                <div class="col-sm-10">
-                    <input type="number" name="total_tickets" class="form-control" id="input-total_tickets" min="1" placeholder="此次活动通过“紫荆之声”的发票总数，如 1000">
-                </div>
-            </div>
 
             <div class="form-group">
                 <label for="input-book-start-year" class="col-sm-2 control-label">订票开始</label>
@@ -314,7 +313,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label">座位分配设置</label>
                 <div class="col-sm-10">
-                    <select name="seat_status" id="input-seat_status" class="form-control" required>
+                    <select name="seat_status" id="input-seat_status" class="form-control" onchange = "selectOnChange(value)" required>
                         <option value="0">不分配座位</option>
                         <option value="1">综体：分配B、C两入口</option>
                         <option value="2">新清华学堂：分A,B,C,D四区</option>
@@ -322,32 +321,46 @@
                 </div>
             </div>
 
-            <div>
-            新清华学堂活动需要填写以下数据：
+            <div class="form-group" id = "total_number">
+                <label for="input-total_tickets" class="col-sm-2 control-label">总票数</label>
+                <div class="col-sm-10">
+                    <input type="number" name="total_tickets" class="form-control" id="input-total_tickets" min="1" placeholder="此次活动通过“紫荆之声”的发票总数，如 1000">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="input-total_tickets_A" class="col-sm-2 control-label">A区票数</label>
-                <div class="col-sm-10">
-                    <input type="number" name="total_tickets_A" class="form-control" id="input-total_tickets_A" min="0" placeholder="A区发票总数，若A区不发票可填0">
-                </div>
+            <div class = "chooseArea">
+                <div class = "checkBoxes"></div>
+                <div class = "seats"></div>
+                
             </div>
-            <div class="form-group">
-                <label for="input-total_tickets_B" class="col-sm-2 control-label">B区票数</label>
-                <div class="col-sm-10">
-                    <input type="number" name="total_tickets_B" class="form-control" id="input-total_tickets_B" min="0" placeholder="B区发票总数，若B区不发票可填0">
+            <div class = "areaSeatNum">
+                <div class = "total_tickets">
+                <!--
+                <div class="form-group" >
+                    <label for="input-total_tickets_A" class="col-sm-2 control-label">A区票数</label>
+                    <div class="col-sm-10">
+                        <input type="number" value = "0" name="total_tickets_A" class="form-control" id="input-total_tickets_A" min="0" placeholder = "A区发票总数" readonly="readonly">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="input-total_tickets_C" class="col-sm-2 control-label">C区票数</label>
-                <div class="col-sm-10">
-                    <input type="number" name="total_tickets_C" class="form-control" id="input-total_tickets_C" min="0" placeholder="C区发票总数，若C区不发票可填0">
+                <div class="form-group">
+                    <label for="input-total_tickets_B" class="col-sm-2 control-label">B区票数</label>
+                    <div class="col-sm-10">
+                        <input type="number" value = "0" name="total_tickets_B" class="form-control" id="input-total_tickets_B" min="0" placeholder = "B区发票总数" readonly="readonly">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="input-total_tickets_D" class="col-sm-2 control-label">D区票数</label>
-                <div class="col-sm-10">
-                    <input type="number" name="total_tickets_D" class="form-control" id="input-total_tickets_D" min="0" placeholder="D区发票总数，若D区不发票可填0">
+                <div class="form-group">
+                    <label for="input-total_tickets_C" class="col-sm-2 control-label">C区票数</label>
+                    <div class="col-sm-10">
+                        <input type="number" value = "0" name="total_tickets_C" class="form-control" id="input-total_tickets_C" min="0" placeholder = "C区发票总数" readonly="readonly">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="input-total_tickets_D" class="col-sm-2 control-label">D区票数</label>
+                    <div class="col-sm-10">
+                        <input type="number" value = "0" name="total_tickets_D" class="form-control" id="input-total_tickets_D" min="0" placeholder = "D区发票总数" readonly="readonly">
+                    </div>
+                </div>
+                -->
                 </div>
             </div>
             <div class="form-group">

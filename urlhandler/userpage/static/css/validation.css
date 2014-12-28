@@ -354,3 +354,14 @@ label {
   background-color: #dff0d8;
   border-color: #468847;
 }
+
+
+.choose_region_btn{
+  margin:5px;
+  border-color: #00F5FF;
+  width: 120px;
+  height: 40px;
+  font-size: 20px;
+  font-family: microsoft Yahei;
+}
+

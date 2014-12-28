@@ -499,3 +499,7 @@ $('#activity-form').submit(function() {
 });
 
 $('.form-control').on('focus', function() {var me = $(this); setTimeout(function(){me.select();}, 100)});
+
+function selectOnChange(){
+    alert("!");
+}

@@ -12,9 +12,10 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response
 from urlhandler.settings import STATIC_URL
 import urllib, urllib2
-import datetime
 from django.utils import timezone
+import datetime
 
+from db import *
 
 def home(request):
     return render_to_response('mobile_base.html')
@@ -107,71 +108,8 @@ def choose_region_post(request):
         openid = request.POST['openid']
         actid = request.POST['actid']
         seat = request.POST['seat']
-
-        user = User.objects.filter(weixin_id=openid)[0]
-        activities = Activity.objects.select_for_update().filter(status=1,  id=actid)
-
-        if not activities.exists():
-            return HttpResponse('actNotExist')			#活动不存在
-        else:
-            activity = activities[0]
-	    
-        if (seat != 'A') and (seat != 'B') and (seat != 'C') and (seat != 'D'):
-            tickets = Ticket.objects.select_for_update().filter(stu_id=user.stu_id, activity=activity)
-            if (not tickets.exists()) or (tickets[0].status != 1):
-                return HttpResponse('TicketNotExist')       #票不存在
-
-            tem_seat = int(seat) 
-            ticket = tickets[0]
-            ticket.seatId = tem_seat
-            ticket.save()
-            return HttpResponse('OK')
-
-        else:
-            if seat == 'A':
-                if activity.remain_tickets_A <= 0:
-                    return HttpResponse('NoTicket')				#A区没有余票
-            if seat == 'B':
-                if activity.remain_tickets_B <= 0:
-                    return HttpResponse('NoTicket')				#A区没有余票
-            if seat == 'C':
-                if activity.remain_tickets_C <= 0:
-                    return HttpResponse('NoTicket')				#A区没有余票
-            if seat == 'D':
-                if activity.remain_tickets_D <= 0:
-                    return HttpResponse('NoTicket')				#A区没有余票
-    			
-            random_string = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
-            while Ticket.objects.filter(unique_id=random_string).exists():
-                random_string = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(32)])
-        
-            tickets = Ticket.objects.select_for_update().filter(stu_id=user.stu_id, activity=activity)
-            if tickets.exists() and tickets[0].status != 0:
-                return HttpResponse('Error')				#
-    	    		
-            next_seat = seat
-            st =  'remain_tickets'+ '_' + seat
-            if not tickets.exists():
-               Activity.objects.filter(id=activity.id).update(remain_tickets=F(st)-1)
-               ticket = Ticket.objects.create(
-                      stu_id=user.stu_id,
-                      activity_id=activity.id,
-                      unique_id=random_string,
-                      status=1,
-                      area=next_seat,
-                      seatId = -1,
-                      type = 2
-               )
-               return HttpResponse('OK1')			
-            elif tickets[0].status == 0:
-                Activity.objects.filter(id=activity.id).update(remain_tickets=F(st)-1)
-                ticket = tickets[0]
-                ticket.status = 1
-                ticket.area = next_seat
-                ticket.save()
-                return HttpResponse('OK1')
-            else:
-                return HttpResponse('TicketBooked')		 #该用户已经定过此票
+        now  = request.POST['now']
+        return choose_region(openid, actid, seat, now)
 	
 
 	

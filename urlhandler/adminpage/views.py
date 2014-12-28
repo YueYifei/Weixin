@@ -170,7 +170,7 @@ def str_to_datetime(strg):
 
 def activity_create(activity):
     preDict = dict()
-    for k in ['name', 'key', 'description', 'place', 'pic_url', 'seat_status', 'total_tickets','total_tickets_A', 'total_tickets_B',  'total_tickets_C', 'total_tickets_D']:
+    for k in ['name', 'key', 'description', 'place', 'pic_url', 'seat_status', 'total_tickets','total_tickets_A', 'total_tickets_B',  'total_tickets_C', 'total_tickets_D', 'seats_for_choose_A', 'seats_for_choose_B', 'seats_for_choose_C', 'seats_for_choose_D']:
         preDict[k] = activity[k]
     for k in ['start_time', 'end_time', 'book_start', 'book_end']:
         preDict[k] = str_to_datetime(activity[k])
@@ -283,6 +283,7 @@ def activity_post(request):
         raise Http404
     post = request.POST
     rtnJSON = dict()
+
     try:
         if 'id' in post:
             activity = activity_modify(post)
@@ -296,6 +297,7 @@ def activity_post(request):
                         return HttpResponse(json.dumps(rtnJSON, cls=DatetimeJsonEncoder),
                                             content_type='application/json')
             activity = activity_create(post)
+            
             rtnJSON['updateUrl'] = s_reverse_activity_detail(activity.id)
         rtnJSON['activity'] = wrap_activity_dict(activity)
         if 'publish' in post:

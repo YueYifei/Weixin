@@ -31,6 +31,7 @@ function disableDatetimePicker(dom) {
     dom.children('.input-group-addon').css('cursor', 'no-drop').children().css('cursor', 'no-drop');
 }
 */
+
 var dateInterfaceMap = {
     'year': 'getFullYear',
     'month': 'getMonth',
@@ -458,7 +459,6 @@ function submitComplete(xhr) {
 
 
 function publishActivity() {
-    alert("!!!!!!")
     if(!$('#activity-form')[0].checkValidity || $('#activity-form')[0].checkValidity()){
         if(!checktime())
             return false;
@@ -500,3 +500,5 @@ $('#activity-form').submit(function() {
 });
 
 $('.form-control').on('focus', function() {var me = $(this); setTimeout(function(){me.select();}, 100)});
+
+

@@ -2,18 +2,18 @@
 <html lang="zh-CN">
 {% load staticfiles %}
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!--,<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0">,width=device-width,  ser-scalable=no-->
     <link href="{% static "css/base.css"%}?_=4" rel="stylesheet" type="text/css" />
     {% block css %}{% endblock %}
     <title>{% block title %}清华紫荆之声——最优秀的校园服务助手{% endblock %}</title>
 </head>
 <body>
 <div id="wrap">
-    <header>{% block header %}
+    <header id="header">{% block header %}
         <img class="header-img" src="{% static "img/newlogo.jpg" %}" />
     {% endblock %}</header>
 
-    <div class="theme">{% block theme %}{% endblock %}</div>
+    <div class="theme" id="theme">{% block theme %}{% endblock %}</div>
 
     <hr/>
     <div id="mainbody">
